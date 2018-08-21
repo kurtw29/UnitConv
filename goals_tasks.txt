@@ -1,0 +1,52 @@
+_*_*_*_* MAIN PAGE _*_*_*_*_*_
+
+Picture representation of the measurement (units)
+    API - of pictures
+    picture layouts
+    AJAX instant picture changes
+
+Units conversation
+    conversation logics of each of the units (API)
+
+AJAX external API for units conversion
+
+*********************************************************
+
+*_*_*_*_*_* LOGIN_*_*_*_*_*_*_*
+
+forgot password
+
+send email with link to reset password
+
+*********************************************************
+
+_*_*_*_*_* USER DASHBOARD *_*_*_*_*_*_*
+Change password
+Add USER
+
+upload pictures
+
+paginations of uploaded pictures
+
+Auto-search subscriber emails(__startswith() function)
+Graph timeline of subscriber & count # of subscribers
+
+
+search feedback (__contains() function)
+Populate data table of feedbacks & provide sort options relative to each column (raw SQL query)
+option to mark 'to-work, work-in-progress, responded, completed"  feedback comments
+populate a list of marked comments (display each list of marked categories)
+
+**************************************************
+
+*_*_*_*_* How-to/FAQ manual *_*_*_*_*_*
+embeded video
+
+step-by-step picture (with Ajax function of "load next step")
+
+provide view choices: (use JQUERY for selecting which to .show() & .hide())
+    view all in one page
+    carosel/slides
+    step-by-step
+
+*********************************************************

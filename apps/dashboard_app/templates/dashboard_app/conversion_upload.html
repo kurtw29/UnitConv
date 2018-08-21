@@ -1,0 +1,60 @@
+<h1>Conversion Upload</h1>
+<!--input form for upload information-->
+<form>
+    {% csrf_token %}
+    <input name='input_number' type="number" min="0" oninput="validity.valid|(value='');" placeholder='Enter positive number here'>
+    <select name='input_unit'>
+        <option>inches</option>
+        <option>feet</option>
+        <option>yard</option>
+        <option>miles</option>
+    </select>
+    <label>File/image upload: </label>
+    <input type='file' name='uploaded_file' placeholder='upload file here'>
+    <img placeholder='image of file here'>
+    <button type='submit' >Update</button>
+</form>
+
+<!--table of the conversion upload-->
+<h1>Upload history</h1>
+<table data-spy='scroll' style='overflow:scroll;'>
+    <tr>
+        <th>ID</th>
+        <th># units</th>
+        <th>File</th>
+        <th>Upload date</th>
+        <th>Delete?</th>
+    </tr>
+    <!--loop for every upload by request.session.id-->
+    ## for conversion_upload in conversion_uploads }}
+    <tr>
+        <td>{{upload_id}}</td>
+        <td>{{num}} {{unit}}</td>
+        <td>{{file_name}}</td>
+        <td>{{created_at}}</td>
+        <!--model pop up alert for deleting uploaded file-->
+        <td><a class="btn btn-primary" href='#'>Delete</a>  
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal">Remove</button>
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Delete uploaded file</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                        <h4>Are you sure you want to delete your uploaded file?</h4>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+                    <a href='/delete_upload/{{upload_id}}' class="btn btn-danger">Yes, remove</a>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </td>
+    </tr>
+

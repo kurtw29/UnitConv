@@ -1,0 +1,74 @@
+<!--Create the input form to enter "Post"-->
+<!--flash error message for empty Post submission-->
+<h2>Wall Messages</h2>
+<a class='btn btn-info btn-sm ml-auto align-middle' href="/dashboard">Back to dashboard</a>
+{% if messages %}
+        <ul class="messages">
+        {% for message in messages %}
+            {% if message.tags == "post error" %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+            {% endif %}
+        {% endfor %}
+        </ul>
+{% endif %}
+    <!--create a form to submit Post-->
+    <div>
+        <h4>Post a Message</h4>
+        <form action= "post_proc" method="POST">
+            {% csrf_token %}
+            <textarea name="content" rows="4" cols="200"></textarea>
+            <button  class="ml-auto" style="display:block;">Post a message</button>
+        </form>
+    </div>
+    <!--display the posted message on this wall-->
+    <!--Search form, words contains in messages-->
+    <form>
+        {% csrf_token %}
+        <label>Search: </label>
+        <input name='contains' type='text'>
+        <input type=button value='Search'>
+    </form>
+    <div class="container">display table here</div>
+
+    <ul class='list-unstyled'>
+        {% for post in posts %}
+            <li><h4>{{post.poster.first_name}} {{post.poster.last_name}} - {{post.created_at}}</h4>
+            {{post.post_text}}
+            <!--display the delete this message link-->
+            {% if post.poster.id == request.session.id %}
+            <br>
+            <a href="/delete_post/{{post.id}}">Delete Message</a>
+            {% endif %}
+            <!--display the comments about this post-->
+                <ul class='list-unstyled'>
+                {% for comment in comments %}
+                    {% if comment.commented_post.id == post.id%}
+                    <h5>{{comment.commentor.first_name}}</h5>
+                    <p>{{comment.created_at}} {{comment.comment_text}}</p>
+                    <!--display the link to delete comment-->
+                        {% if comment.commentor.id == request.session.id %}
+                        <a href='/deleteComment/{{comment.id}}'>Delete</a>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %} 
+        {% endfor %}
+<h3 class='alert alert-warning'>Wall Communication history</h3>
+<ul class='list-unstyled border border-secondary'>
+    <!--List of all the post/message-->
+    {% for post in posts %}
+    <li><p>Date posted desc order</p>
+    <p>Post context</p>
+    <p class='text-right'>Date posted</p><a href='#' class="btn btn-danger">delete</a>
+
+    <!--comments for each of the wall post-->
+    <ul class='list-unstyled border border-secondary'>
+        {% for comment in comments %}
+        <li class='border border-secondary'>
+            <p>Date comment posted desc order, comment associated with the post
+            <p class='text-right'>Date posted</p><a href='#' class="btn btn-danger">delete</a>
+        </li>
+        {% endfor %}
+    </ul>
+    </li>
+   {% endfor %}
+</ul></div>

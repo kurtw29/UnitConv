@@ -1,0 +1,50 @@
+<h1>Upload history</h1>
+<a class='btn btn-info btn-sm ml-auto align-middle' href="/dashboard">Back to dashboard</a>
+<!--Search through subscribers list-->
+<form>
+        {% csrf_token %}
+        <label>Search email: </label>
+        <input name='startswith' type='text' placeholder='starts with...'>
+        <input type=button value='Search'>
+    </form>
+    <div class="container mb-5">display search output table here</div>
+<br><br>
+<table data-spy='scroll' style='overflow:scroll;'>
+    <tr>
+        <th>ID</th>
+        <th>Email</th>
+        <th>Subscribed date</th>
+        <th>Unsubscribe?</th>
+    </tr>
+    <!--loop for every upload by request.session.id-->
+    ## for subscription in subscriptions }}
+    <tr>
+        <td>{{subscription.id}}</td>
+        <td>{{subscription.email}}</td>
+        <td>{{subscription.created_at}}</td>
+        <!--model pop up alert for deleting uploaded file-->
+        <td><a class="btn btn-primary" href='#'>Unsubscribe</a>  
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal">Unsubscribe</button>
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Unsubscribe user</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                        <h4>Are you sure you want to unsubscribe this person?</h4>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+                    <a href='/unsubscribe/{{subscription_id}}' class="btn btn-danger">Yes, remove</a>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </td>
+    </tr>
+    

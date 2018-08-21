@@ -1,0 +1,13 @@
+img{
+  height:auto;
+}
+
+#outputA, #outputB{
+  overflow:visible;
+}
+
+button.unitA:active, button.active, button.unitB:active, button.active{
+  background:grey;
+  color:white;
+
+}
