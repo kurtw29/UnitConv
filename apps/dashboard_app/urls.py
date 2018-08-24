@@ -13,6 +13,7 @@ urlpatterns = [
     url(r'conversion_upload$', views.conversion_upload),
     url(r'delete_upload/(?P<upload_id>\d+)$', views.delete_upload),
     url(r'feedback$', views.feedback),
+    url(r'feedbacks_ajax$', views.feedbacks_ajax),
     url(r'delete_feedback/(?P<feedbackid>\d+)$', views.delete_feedback),
     url(r'subscription$', views.subscription),
     url(r'subscribers_search$', views.subscribers_search),

@@ -41,8 +41,14 @@ def feedback_proc(request):
         errors = Feedback.objects.feedback_validator(request.POST)
         if len(errors):
             messages.error(request, "Please rate our site.")
+            request.session['layout_text']=request.POST['layout_text']
+            request.session['feature_text']=request.POST['feature_text']
+            request.session['speed_text']=request.POST['speed_text']
+            request.session['conversion_text']=request.POST['conversion_text']
+            request.session['other_text']=request.POST['other_text']
             return redirect('/feedback')
         else:
+            request.session.clear()
             layout = feature = speed = conversion = other = ''
             if 'layout' in request.POST:
                 layout = request.POST['layout']
@@ -139,3 +145,7 @@ def login_process(request):
 def logout(request):
     request.session.clear()
     return redirect('/')
+
+def display_image(request):
+    print("*_"*12,'WE CAME TO  VIEWS.display_image',"-*"*12)
+    return render(request, '/unit_conv_app/display_image.html')

@@ -1,10 +1,3 @@
-body{
-  background-image:linear-gradient( rgb(250, 239, 178), rgb(255, 255, 246));
-}
-.header{
-  background-image:linear-gradient(rgb(243, 239, 183),rgb(255, 255, 246),rgb(243, 239, 183));
-  
-}
 .activeTab{
   background-color: rgb(243, 239, 183) !important;
   border-bottom-color: rgb(243,239,183) !important;
@@ -18,48 +11,67 @@ div.row{
   min-height:auto;
   margin-bottom: 20px;
 }
-#outputA, #outputB{
+#output_A{
   border: 2px solid orange;
   height:150px;
   font-size: 40px;
   vertical-align: top;
   text-align: center;
   border-radius:10px !important;
-  padding-top:10%;
-  padding-bottom:10%;
+  padding-top:40px;
   white-space: nowrap;
   text-overflow:ellipsis;
   overflow: hidden;
 }
 
-#outputA:hover, #outputB:hover{
+#output_A:hover{
   overflow:visible;
 }
 
-
-@media only screen and (max-width: 800px){
-  #outputA, #outputB{
-    font-size: 15px;
-    min-height: auto;
-  }
+#output_B{
+  border: 2px solid orange;
+  height:150px;
+  font-size: 40px;
+  vertical-align: top;
+  text-align: center;
+  border-radius:10px !important;
+  padding-top:40px;
+  white-space: nowrap;
+  text-overflow:ellipsis;
+  overflow: hidden;
 }
-.unitBox{
+#output_B:hover{
+  overflow:visible;
+}
+
+h5.input_instruction{
+  color:rgb(255, 115, 0) !important;
+  text-align:center;
+}
+
+input[type='radio']{
+  width:25px;
+  height:25px;
+  margin-top:5px;
+}
+
+/* .unitBox{
   vertical-align: middle;
   text-align: center;
 }
 
-button.unitA:active, button.active, button.unitB:active, button.active{
+input.unitA:active, button.active, button.unitB:active, button.active{
   background:rgb(31, 221, 158);
   color:black;
   vertical-align: middle;
   width:100px !important;
 }
 
-button.unitA, button.unitB{
+input.unitA, button.unitB{
   width:70px;
-}
+} */
 
-button.input_num{
+input.input_num{
   width: 100px;
   height: 100px;
   /* border-radius:50%; */
@@ -79,14 +91,24 @@ button.keypad{
   outline:none;
 }  
 
-button.input_num:active, button.keypad:active{
+button.input_num:active{
   background-color:yellowgreen;
   transform: translateY(4px);
   font-size:70px;
 }
 
-#input_warning{
-  height:40px;
+#backspace:active{
+  background-color:yellowgreen;
+  transform: translateY(4px);
+  font-size:30px;
+  font-weight:bold;
+}
+
+#clear:active{
+  background-color:yellowgreen;
+  transform: translateY(4px);
+  font-size:30px;
+  font-weight:bold;
 }
 
 @media only screen and (min-width: 992px){
@@ -94,5 +116,3 @@ button.input_num:active, button.keypad:active{
     min-height: auto;
   }
 }
-
-@media only screen and ()

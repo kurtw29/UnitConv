@@ -1,4 +1,4 @@
-T<!doctype html>
+<!doctype html>
 <html lang='en'>
 <head>
     <meta charset='utf-8'>
@@ -9,16 +9,17 @@ T<!doctype html>
 
 {% load static %}
 <script type='text/javascript' src="{% static 'unit_conv_app/JS/feedback.js' %}"></script>
+<link rel="stylesheet" type= "text/css" href="{% static 'unit_conv_app/CSS/templating.css' %}">
 
 </head>
 <body>
     <!--repulicate the navi-bar-->
-    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+    <div class="header d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
             {% load static %}
             <a href='/'><img src="{% static "unit_conv_app/images/Google_closure_tools_logo.png" %}" alt='logo pic' width=60px></a>
             <h5 class="my-0 mr-md-auto font-weight-normal"><a href='/'>Unit Conversion</a></h5>
             <nav class="my-2 my-md-0 mr-md-3">
-              <a class="p-2 text-dark" href="#">How-To/Demo</a>
+              <!-- <a class="p-2 text-dark" href="#">How-To/Demo</a> -->
               <a class="p-2 text-dark" href="/subscribe">Subscribe</a>
               <a class="p-2 text-dark" href="/feedback">Feedback</a>
             </nav>
@@ -63,27 +64,27 @@ T<!doctype html>
         <ul class='list-unstyled'>
             <li><label for='layout'>Layout Design</label>
             <input name='layout' type='checkbox' class='mt-2' id='checkbox_layout' value='layout'>
-            <textarea name='layout_text' id='layout_text' style='display:none' class='feedback_textarea row container ml-auto' placeholder='Type here...' value=' '></textarea>
+            <textarea name='layout_text' id='layout_text' style='display:none' class='feedback_textarea row container ml-auto' placeholder='Type here...' value=' '>{{request.session.layout_text}}</textarea>
             </li>
 
             <li><label for='feature'>More features</label>
             <input name='feature' type='checkbox' class='mt-2' id='checkbox_feature' value='feature'>
-            <textarea name='feature_text' id='feature_text' style='display:none' class='feedback_textarea row container ml-auto' placeholder='Type here...' value=' '></textarea>
+            <textarea name='feature_text' id='feature_text' style='display:none' class='feedback_textarea row container ml-auto' placeholder='Type here...' value=' '>{{request.session.feature_text}}</textarea>
             </li>
 
             <li><label for='speed'>Website speed</label>
             <input name='speed' type='checkbox' class='mt-2' id='checkbox_speed' value='speed'>
-            <textarea name='speed_text' id='speed_text' style='display:none' class='feedback_textarea row container ml-auto' placeholder='Type here...' value=' '></textarea>
+            <textarea name='speed_text' id='speed_text' style='display:none' class='feedback_textarea row container ml-auto' placeholder='Type here...' value=' '>{{request.session.speed_text}}</textarea>
             </li>
 
             <li><label for='conversion'>Conversion</label>
             <input name='conversion' type='checkbox' class='mt-2' id='checkbox_conversion' value='conversion'>
-            <textarea name='conversion_text' id='conversion_text' style='display:none' class='feedback_textarea row container ml-auto' placeholder='Type here...' value=' '></textarea>
+            <textarea name='conversion_text' id='conversion_text' style='display:none' class='feedback_textarea row container ml-auto' placeholder='Type here...' value=' '>{{request.session.conversion_text}}</textarea>
             </li>
 
             <li><label for='other'>Others, we accept compliments too!</label>
             <input name='other' type='checkbox' class='mt-2' id='checkbox_other' value='other'>
-            <textarea name='other_text' id='other_text' style="display:none" class='feedback_textarea row container ml-auto' placeholder='Type here...' value=' '></textarea>
+            <textarea name='other_text' id='other_text' style="display:none" class='feedback_textarea row container ml-auto' placeholder='Type here...' value=' '>{{request.session.other_text}}</textarea>
             </li>
         </ul>
             <label class='contact'>Can we follow up with you?   Yes</label>
@@ -91,7 +92,7 @@ T<!doctype html>
             <input name='feedback_email' type='text' id='feedback_email' style="display:none" placeholder='Please enter email here'>
         <br>
             <button class="btn btn-primary mt-3" type="submit">Submit feedback</button>
-            <a class='btn btn-success ml-2 mt-3' href='/'>Return back</a>
+            <a class='btn btn-success ml-2 mt-3' href='/'>Back to main page</a>
         </form>
         <!--flash message for success/error-->
         {% if messages%}

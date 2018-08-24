@@ -1,7 +1,8 @@
 $(document).ready(function(){
-  //initalize variable, "sum" for outputA, "sum2" for outputB
+  //initalize variable, "sum" for output_A, "sum2" for output_B
   var sum = '';
-  
+  $('.input_instruction').html("Click keypad to enter number. Convert from Left_Box to Right_Box")
+
   //Determine the initial units
   var unit_inputA = $("input[type=radio][name=unitA]:checked").val();
   console.log("initial unit_inputA:", unit_inputA)
@@ -19,9 +20,6 @@ $(document).ready(function(){
     conversion(unit_inputA, unit_inputB, sum);
   })
 
-  
-
-
 //   //Identified the units
   $('.containerA').children("button").click(function(){
     var unit_inputA = $(this).text();
@@ -36,8 +34,9 @@ $(document).ready(function(){
   $('.input_num').click(function(){
     var num = $(this).html()
     if(sum.length > 15 || sum > 100000){
-      $('#input_warning').html("eep! The number's too high. Please click 'clear' to restart")
+      $('.input_instruction').html("eep! The number's too high. Please click 'clear' to restart")
     } else{
+      $('.input_instruction').html("Click keypad to enter number. Convert from Left_Box to Right_Box")
       sum = sum+num;
       $('#output_A').html(sum);
       conversion(unit_inputA, unit_inputB, sum)
@@ -45,8 +44,6 @@ $(document).ready(function(){
       };
     console.log()    
   })
-    
-
   //clear the "sum" amount upon click "clear"
   $('#clear').click(function(){
     sum = ''
@@ -59,6 +56,7 @@ $(document).ready(function(){
     sum = parseInt(sum)
     sum = sum/10 | 0;
     $("#output_A").html(sum)
+    conversion(unit_inputA, unit_inputB, sum)
     $('#input_warning').html()
   })
   // //Select one of the output A's units (and stay clicked until other)
@@ -78,6 +76,12 @@ $(document).ready(function(){
   //Function for calcatating the conversion:
   function conversion(unit_inputA, unit_inputB, sum){
     //INCHES TO INCHES
+      $('#image_convert').attr('src', 'static/unit_conv_app/images/cb1.jpg')
+    // $.ajax({
+    //   url: "/display_image"
+
+    // })
+    console.log("CONVERSION image change")
     if(unit_inputA == "inches" && unit_inputB == "inches"){
         return $('#output_B').html(sum);
       }

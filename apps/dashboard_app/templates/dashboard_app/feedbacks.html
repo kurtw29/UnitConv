@@ -47,22 +47,21 @@
     </ul>
 
 
-<h2 class='card-header'>Feebacks <a class='h5 text-info ml-auto' href="/dashboard">Back to dashboard</a></h2>
+<h2 class='card-header'>Feedbacks <a class='h5 text-info ml-auto' href="/dashboard">Back to dashboard</a></h2>
 <div class="mt-5">
 <!--Create search form to filter/retrieve feedback data-->
-<form>
+<!-- <form action='/dashboard/feedbacks_ajax' method='post' id='fb_search' >
     {% csrf_token %}
-    <label>Search: </label>
-    <input name='startswith' type='text'>
+    <label>Feedbacks on: </label>
     <select name='feedback_categories'>
-        <option selected>Layout Design</option>
-        <option>More features</option>
-        <option>Lag</option>
-        <option>Conversion</option>
-        <option>Other</option>
-    <input type=button value='Search'>
+        <option value='Layout' selected>Layout</option>
+        <option value='Feature'>Features</option>
+        <option value='Speed'>Speed</option>
+        <option value='Conversion'>Conversion</option>
+        <option value='Other'>Other</option>
+    <input type=submit value='Search'>
 </form>
-<div class="container">display search output table here</div>
+<div class="container" id='feedbacks_ajax'>display search output table here</div> -->
 
 <table class='table' data-spy='scroll' style='overflow:scroll;'>
     <!--heading of the Feedback table, link to order_by col-->
@@ -92,15 +91,15 @@
             <th scope = 'row'>{{feedback.id}}</th>
             <td>{{ feedback.rating }}</td>
             <td>{{ feedback.layout }}</td>
-            <td>{{ feedback.layout_text }}</td>
+            <td>{{ feedback.layout_response }}</td>
             <td>{{ feedback.feature }}</td>
-            <td>{{ feedback.feature_text }}</td>
+            <td>{{ feedback.feature_response }}</td>
             <td>{{ feedback.speed }}</td>
-            <td>{{ feedback.speed_text }}</td>
+            <td>{{ feedback.speed_response }}</td>
             <td>{{ feedback.conversion }}</td>
-            <td>{{ feedback.conversion_text }}</td>
+            <td>{{ feedback.conversion_response }}</td>
             <td>{{ feedback.other }}</td>
-            <td>{{ feedback.other_text }}</td>
+            <td>{{ feedback.other_response }}</td>
             <td>{{ feedback.created_at }}</td>
             <td>{{ feedback.email}}</td>
             <!--model pop up alert for deleting uploaded file-->
@@ -108,12 +107,25 @@
             </td>
         </tr>
     {% endfor %}
+    </table>
     </div>
 
-<script>
+<!-- <script>
+    $('#fb_search').submit(function(e){
+        e.preventDefault()
+        
+        $.ajax({
+            url: $(this).attr('action'),
+            method: "post",
+            data: $(this).parent().serialize(),
+            success: function(feedback_search){
+                $('#feedbacks_ajax').html(feedback_search)
+            }
+        })
+        // return false;
+    })
 
 
-
-</script>
+</script> -->
 </body>
 </html>

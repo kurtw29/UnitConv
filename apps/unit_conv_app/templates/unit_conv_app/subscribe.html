@@ -6,15 +6,18 @@
 <meta name='description' content=''>
 <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
 <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'>
+{% load static %}
+<link rel="stylesheet" type= "text/css" href="{% static 'unit_conv_app/CSS/templating.css' %}">
+
 </head>
 <body>
     <!--repulicate the navi-bar-->
-    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+    <div class="header d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
             {% load static %}
             <a href='/'><img src="{% static "unit_conv_app/images/Google_closure_tools_logo.png" %}" alt='logo pic' width=60px></a>
             <h5 class="my-0 mr-md-auto font-weight-normal"><a href='/'>Unit Conversion</a></h5>
             <nav class="my-2 my-md-0 mr-md-3">
-              <a class="p-2 text-dark" href="#">How-To/Demo</a>
+              <!-- <a class="p-2 text-dark" href="#">How-To/Demo</a> -->
               <a class="p-2 text-dark" href="/subscribe">Subscribe</a>
               <a class="p-2 text-dark" href="/feedback">Feedback</a>
             </nav>

@@ -9,6 +9,8 @@
 
 {% load static %}
 <link rel="stylesheet" type= "text/css" href="{% static 'unit_conv_app/CSS/index.css' %}">
+<link rel="stylesheet" type= "text/css" href="{% static 'unit_conv_app/CSS/templating.css' %}">
+
 <script type='text/javascript' src="{% static 'unit_conv_app/JS/index.js' %}"></script>
 
 </head>
@@ -18,10 +20,10 @@
   <!--creating navigation bar at top-->
     <div class="header d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 border-bottom shadow-sm">
       {% load static %}
-      <a href='/'><img src="{% static "unit_conv_app/images/Google_closure_tools_logo.png" %}" alt='logo pic' width=60px></a>
+      <a href='/'><img src="{% static 'unit_conv_app/images/Google_closure_tools_logo.png' %}" alt='logo pic' width=60px></a>
       <h5 class="my-0 mr-md-auto font-weight-normal"><a href='/'>Unit Conversion</a></h5>
       <nav class="my-2 my-md-0 mr-md-3">
-        <a class="testout p-2 text-dark" href="#">How-To/Demo</a>
+        <!-- <a class="testout p-2 text-dark" href="#">How-To/Demo</a> -->
         <a class="p-2 text-dark" href="/subscribe">Subscribe</a>
         <a class="p-2 text-dark" href="/feedback">Feedback</a>
         <a class="p-2 text-dark" href='/dashboard'>Dashboard</a>
@@ -40,8 +42,8 @@
     <!--create row container for the number output -->
     <div class="row mt-5 output_content">
       <!--output A in col 1 of 2-->
-      <div class="container col-5">
-        <div id='outputA' class='container'><span id='output_A'></span>
+      <div class="container col-4">
+        <div id='output_A' ><span id='output_A'></span>
         </div>
       <!--form of the 4 diff units for output A-->
         <form class='container containerA'>
@@ -52,8 +54,8 @@
         </form>
       </div>
       <!--output B in col 2 of 2-->
-      <div class="container col-5">
-        <div id='outputB' class='container'><span id='output_B'></span></div>
+      <div class="container col-4">
+        <div id='output_B' ><span id='output_B'></span></div>
         <!--form of 4 diff units for output B-->
         <div class="container containerB btn-width">
           {% csrf_token %}
@@ -65,11 +67,12 @@
         </div>
       </div>
     </div>
-    <p id='input_warning' class='container'><p>
+    <h5 class='input_instruction container'></h5>
   <!--the conversion image-->
   <div class="row output_content">
-    {% load static %}
-    <img id ='image_convert' class='d-inline-block col-5 mt-5' src="{% static "unit_conv_app/images/can.png" %}" alt='conversion image'>
+    <div id='display_image' class="container d-inline-block col-5 mt-5">{% load static %}
+        <img id ='image_convert' src="{% static 'unit_conv_app/images/can.png' %}" alt='conversion image'>
+    </div>
   <!--keypad-->
     <div class="mx-auto text-center d-inline-block col-7 center mt-5">
       <div class="container">

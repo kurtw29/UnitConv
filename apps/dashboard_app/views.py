@@ -3,11 +3,12 @@ from django.contrib import messages
 from apps.unit_conv_app.models import *
 from django.core import serializers
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 #User arrives to dashboard after registration/logged in
 def dashboard(request):
     if 'id' not in request.session:
-        messages.error(request,"Need to login/signup for access to dashboard", "dash")
+        messages.error(request,"Need to login/signup to access dashboard", "dash")
         return redirect('/loginReg')
     else:
     # try:
@@ -62,8 +63,38 @@ def delete_upload(request, upload_id):
     return redirect('conversion_upload')
 
 def feedback(request):
+    if 'id' not in request.session:
+        messages.error(request,"Need to login/signup", "dash")
+        return redirect('/loginReg')
     feedbacks = Feedback.objects.all().order_by('-id')
     return render(request,'dashboard_app/feedbacks.html', {"feedbacks":feedbacks})
+
+@csrf_exempt
+def feedbacks_ajax(request):
+
+    print("*_"*20,"POST data: ", request.POST)
+    if request.POST['Layout'] == "Layout":
+        feedback_list={
+            'flayout' : Feedback.objects.filter(layout='layout')
+        }
+    elif request.POST['Features'] == "Features":
+        feedback_list={
+            'ffeature' : Feedback.objects.filter(feature='feature')
+        }
+    elif requeste.POST['Speed'] == "Speed":
+        feedback_list={
+            'fspeed' : Feedback.objects.filter(speed='speed')
+        }
+    elif request.POST['Conversion'] == 'Conversion':
+        feedback_list={
+                'fconversion' : Feedback.objects.filter(conversion='conversion')
+        }
+    elif request.POST['Other'] == 'Other':
+        feedback_list={
+            'fother' : Feedback.objects.filter(other='other')
+        }
+    print('request.POST', request.POST)
+    return render(request, 'dashboard_app/feedbacks_ajax.html', feedback_list)
 
 def delete_feedback(request, feedbackid):
     dfeed = Feedback.objects.get(id=feedbackid)

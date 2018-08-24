@@ -12,4 +12,5 @@ urlpatterns = [
     url(r'reg_process$', views.reg_process),
     url(r'login_process$', views.login_process),
     url(r'logout$', views.logout),
+    url(r'^display_image$', views.display_image),
 ]
