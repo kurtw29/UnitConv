@@ -11,5 +11,5 @@ urlpatterns = [
     url(r'^loginReg$', views.loginReg),
     url(r'reg_process$', views.reg_process),
     url(r'login_process$', views.login_process),
-    url(r'logout$', views.logout)
+    url(r'logout$', views.logout),
 ]

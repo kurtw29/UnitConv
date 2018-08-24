@@ -1,0 +1,21 @@
+<!--FOR account info- wall feature-->
+<h3 class='alert alert-warning'>Wall Communication history</h3>
+<ul class='list-unstyled border border-secondary'>
+    <!--post/message submitted by this user, id=request.session.id-->
+    {%for post in posts%}
+    <li><p>Date posted desc order</p>
+    <p>Post context</p>
+    <p class='text-right'>Date posted</p><a href='#' class="btn btn-danger">delete</a>
+    </li>
+    <!--comments for each of the wall post-->
+    <ul class='list-unstyled border border-secondary'>
+        ## for comment in comments }}
+        <li class='border border-secondary'>
+            <p>Date comment posted sec order comment associated with the post
+            <p class='text-right'>Date posted</p><a href='#' class="btn btn-danger">delete</a>
+        </li>
+        ## endfor }}
+    </ul>
+   ## endfor }}
+</ul></div>
+</div>

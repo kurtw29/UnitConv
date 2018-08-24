@@ -27,6 +27,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'kurtwangdev@gmail.com'
+EMAIL_HOST_PASSWORD = 'Email123$'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+#unlock Captcha http://accounts.google.com/displayunlockcaptcha
 
 # Application definition
 

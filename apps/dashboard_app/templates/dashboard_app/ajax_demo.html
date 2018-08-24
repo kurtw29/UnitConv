@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang='en'>
+<head>
+    <meta charset='utf-8'>
+    <title></title>
+<meta name='description' content=''>
+<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'>
+</head>
+<body>
+
+        <h1>Ajax Demo 1</h1>
+        <button class='btn btn-primary' id='button_json'>Fetch HttpResponse from JSON</button>
+
+        <button class='btn btn-primary' id='button_html'>Fetch Httpresponse from HTML</button>
+        
+        <div class="container" id='placeholder1' style='margin-top:50px; border:1px solid silver;'>Placeholder for Jax content</div>
+
+<script>
+
+    $('#button_json').click(function(){             //add EventListener
+        console.log("the json button is clicked");
+        $.ajax({        //Ajax method, notice the {}, we are passing a javascript object with a few attributes
+            url: "/dashboard/all.json",     // we want the Ajax request to be sent to this URL
+                                            // we are not sending any other methods or submitting any informations thru GET or POST
+            success: function(seResponse){          // upon success -> run the following function, and serverResponse will be passed to this function
+                console.log('success serverResponse:', seResponse)
+                $('#placeholder1').html(JSON.stringify(seResponse))
+            }
+        })
+    });
+
+    $('#button_html').click(function(){
+        console.log("the html button is clicked");
+        $.ajax({
+            url: "/dashboard/all.html",
+            success:function(serverResponse){
+                console.log('successs! Severressponse:', serverResponse);
+                $('#placeholder1').html(serverResponse)
+            }
+        })
+    });
+
+</script>
+
+<h1>Demo 2 - Ajax form</h1>
+<form action='/dashboard/find' method='post'>
+    {% csrf_token %}
+    Find all all subscriber with email starting "a"
+    <input type='text' name='email_starts_with' id="ajax_email" />
+</form>
+<div id='placeholder2'>Placeholder2</div>
+
+<script>
+    $('#ajax_email').keyup(function(){
+        console.log('came here')
+        console.log("parents serialized() returned", $(this).parent().serialize())
+        $.ajax({
+            url:'/dashboard/find',
+            method:"post",
+            data: $(this).parent().serialize(),
+            success: function(serverResponse){
+                console.log('success', serverResponse)
+                $('#placeholder2').html(serverResponse)
+            }
+        })
+    })
+</script>
+
+</body>
+</html>

@@ -41,12 +41,8 @@ class UserManager(models.Manager):
 
     def feedback_validator(self, postData):
         errors={}
-        if len(postData['']) < 1:
-            errors[''] = " cannot be blank"
-        elif not name_regex.match(postData['']):
-            errors[''] = "Name should be letters only"
-        if len(postData[' ']) < 1:
-            errors[' '] = "  cannot be empty"
+        if 'rating' not in postData:
+            errors['rating'] = "Please rate our site"
         return errors
 
     def edit_validator(self, postData):
@@ -82,12 +78,18 @@ class UserManager(models.Manager):
             errors['confirm_new_password'] = "Confirm password needs to match new password"
         return errors
         
+    def post_validator(self, postData):
+        errors = {}
+        if len(postData['content']) < 1:
+            errors['post']= "Cannot post an empty message"
+        return errors
 
 class User(models.Model):
     first_name = models.CharField(max_length = 255)
     last_name = models.CharField(max_length = 255)
     email = models.CharField(max_length = 255)
     password = models.CharField(max_length=255)
+    desc = models.TextField(default="")
     user_level = models.PositiveSmallIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
@@ -126,15 +128,16 @@ class Subscriber(models.Model):
 class Feedback(models.Model):
     rating = models.PositiveSmallIntegerField()
     feedback_email = models.CharField(max_length=255, default='')
-    created_at = models.DateTimeField(auto_now_add = True)
-    updated_at = models.DateTimeField(auto_now = True)
-    objects = UserManager()
-
-
-class Response(models.Model):
-    response_text = models.TextField(blank = True, default='')
-    response_category = models.CharField(max_length=255, blank = True, default='')
-    survey_key = models.ForeignKey(Feedback, related_name='response_key')
+    layout=models.CharField(max_length=45, default='')
+    layout_response = models.TextField(blank = True, default='')
+    feature=models.CharField(max_length=45, default='')
+    feature_response = models.TextField(blank = True, default='')
+    speed=models.CharField(max_length=45, default='')
+    speed_response = models.TextField(blank = True, default='')
+    conversion=models.CharField(max_length=45, default='')
+    conversion_response = models.TextField(blank = True, default='')
+    other=models.CharField(max_length=45, default='')
+    other_response = models.TextField(blank = True, default='')
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
     objects = UserManager()

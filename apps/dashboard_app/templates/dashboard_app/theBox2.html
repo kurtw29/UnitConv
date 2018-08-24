@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>The Box</title>
+    <meta name="description" content="what can this box do>">
+    <link rel="stylesheet" type="text/css" href="unit_conv_app/CSS/thebox.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+
+    <script>
+        $(document).ready(function(){
+
+        $("p.intro").click(function(){
+            $("p.intro").html("Why is the box not centered?")
+        });
+        $(".box").click(function(){
+            $(".box").html("<p><br>No Idea</p>");
+            $(".box").append("<div class='click-box'></div>");
+            $(".click-box").hide();
+            $(".box").before("<div class=box-mover></div>");
+        });
+        $("p.intro").click(function(){
+            $('p.intro').after("<div class='box-mover></div>");
+            $("p.intro").slideUp();
+        })
+        $(".box-mover").click(function(){
+            $(".box").fadeOut(500);
+        })
+        var messageCountDown=0;
+        $('h1').click(function(){
+            $(".box").fadeOut(400);
+            console.log(messageCountDown);
+            messageCountDown++;
+            $('p.intro').after("<p class='message'>Oh no! Where did the box go?</p>");
+            if(messageCountDown==10){
+                $('p.message').hide();
+
+                $('p.intro').after("<h1 class='messageLOL'>LOLOLOL You done clicking???</h1>");
+            }else if(messageCountDown==20){
+                $('*').hide();
+                document.write("You seriously need to chill out. Seek help, call Quang or make a box.");
+            }
+        })
+        
+        $('.box-mover').click(function(){
+            $(".box").fadeIn();
+            
+        })
+        
+    })
+    </script>
+
+
+</head>
+<body>
+    <div class='container'>
+    <h1 class='name'>What can this box do?</h1>
+    <h3 class='intro'>click around and find out</h3>
+    <p class='intro'>Maybe click here to help you get started?</p>
+    <div class='box-mover'></div>
+        <div class='box'></div>
+
+    </div>
+</body>
+</html>

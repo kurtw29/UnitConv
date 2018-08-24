@@ -1,0 +1,15 @@
+<table class='table'>
+    <thead>
+        <tr>
+            <th scope='col'>email</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for subscriber in subscribers %}
+        <tr>
+            <th scope="row">{{subscriber.id}}</th>
+            <td>{{subscriber.sub_email}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

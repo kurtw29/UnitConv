@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib import messages
 from apps.unit_conv_app.models import *
+from django.core.mail import send_mail
+from django.conf import settings
+
 import bcrypt
 
 # Create your views here.
@@ -21,13 +24,56 @@ def index_volume(request):
     return render(request, 'unit_conv_app/index_volume.html')
 
 def feedback(request):
-    return render(request, 'unit_conv_app/feedback.html')
+    feedback_categories={
+        "layout":"layout",
+        "feature":"feature",
+        "speed":"speed",
+        "conversion":"conversion",
+        "other":"other"
+    }
+
+    return render(request, 'unit_conv_app/feedback.html', feedback_categories)
 
 def feedback_proc(request):
     # check if we have received request POST
     if request.method == 'POST':
-        #validate email
-        return redirect('/feedback')
+        print("*_*"*12, request.POST, "THIS IS REQUEST. POST", "*_*"*12)
+        errors = Feedback.objects.feedback_validator(request.POST)
+        if len(errors):
+            messages.error(request, "Please rate our site.")
+            return redirect('/feedback')
+        else:
+            layout = feature = speed = conversion = other = ''
+            if 'layout' in request.POST:
+                layout = request.POST['layout']
+            if 'feature' in request.POST:
+                feature = request.POST['feature']
+            if 'speed' in request.POST:
+                speed = request.POST['speed']
+            if 'conversion' in request.POST:
+                conversion = request.POST['conversion']
+            if 'other' in request.POST:
+                other = request.POST['other']
+                
+            layout_text = feature_text = speed_text = conversion_text = other_text = ''
+            if 'layout_text' in request.POST:
+                layout_text = request.POST['layout_text']
+            if 'feature_text' in request.POST:
+                feature_text = request.POST['feature_text']
+            if 'speed_text' in request.POST:
+                speed_text = request.POST['speed_text']
+            if 'conversion_text' in request.POST:
+                conversion_text = request.POST['conversion_text']
+            if 'other_text' in request.POST:
+                other_text = request.POST['other_text']
+            Feedback.objects.create(rating=request.POST['rating'],
+             layout=layout,
+             feature=feature,
+             speed=speed,
+             conversion=conversion,
+             other=other,
+             feedback_email=request.POST['feedback_email'], layout_response=layout_text,  feature_response=feature_text,  conversion_response=conversion_text, other_response=other_text)
+            messages.success(request, "Thank you for your feedback!")
     return redirect('/feedback')
 
 def subscribe(request):
@@ -47,8 +93,11 @@ def subscribe_proc(request):
                 return redirect('/subscribe')
         # data are valid, enter data
         else:
-            sEmail = Subscriber.objects.create(sub_email = request.POST['subscriber_email'])
+            Subscriber.objects.create(sub_email = request.POST['subscriber_email'])
             messages.success(request, "Successfully subscribed! Thank you!")
+            subject = "Thank you for subscribing!"
+            email_from = settings.EMAIL_HOST_USER
+            send_mail(subject, "You've successfully subscribed! Thank you!", email_from, [request.POST['subscriber_email']], fail_silently=False)
             return redirect('/subscribe')
 
     return redirect('/subscribe')

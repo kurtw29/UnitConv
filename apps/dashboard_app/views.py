@@ -1,18 +1,20 @@
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib import messages
 from apps.unit_conv_app.models import *
+from django.core import serializers
+from django.http import JsonResponse
 
 #User arrives to dashboard after registration/logged in
 def dashboard(request):
     if 'id' not in request.session:
         messages.error(request,"Need to login/signup for access to dashboard", "dash")
         return redirect('/loginReg')
-    try:
-        # user to Super dasbhboard if user_level == 9, otherwise normal dashboard
-        print(request.session['id'], "IDIDIDIDIDIDIDIDIDID")
-        if User.objects.get(id=request.session['id'], user_level=9):
-            return render(request, 'dashboard_app/dashboard_super.html')
-    except:
+    else:
+    # try:
+    #     # user to Super dasbhboard if user_level == 9, otherwise normal dashboard
+    #     if User.objects.get(id=request.session['id'], user_level=9):
+    #         return render(request, 'dashboard_app/dashboard_super.html')
+    # except:
         return render(request, 'dashboard_app/dashboard.html')
 
 def conversion_upload(request):
@@ -34,14 +36,24 @@ def change_password(request):
         return redirect('/loginReg')
 
 def change_password_proc(request):
-    # user = User.objects.get(id=request.session['id'])
-    # if request.method == POST:
-    #     #validate password form
-    #     errors = 
-    #     if len(errors):
-    return redirect('dashboard')
-
-
+    if not request.method == POST:
+        return redirect('change_password')
+    errors = User.objects.change_password_validator(request.POST)
+    user = User.objects.get(id=request.session['id'])
+    # validating password form
+    if len(errors):
+        for key, value in errors.items():
+            messages.error(request, key, "password")
+            return redirect('change_password')
+    # check current password matches
+    elif not bcrypt.checkpw(request.POST['current_password'].encode(), user[0].password.encode()):
+        messages.error(request, "wrong password", "password")
+        return redirect('change_password')
+    # edit password in the database
+    user.password = request.POST['new_password']
+    user.save()
+    messages.success(request, "password changed", "password")
+    return redirect('change_password')
 
 def delete_upload(request, upload_id):
     #delete upload_file with id == upload_id
@@ -50,53 +62,102 @@ def delete_upload(request, upload_id):
     return redirect('conversion_upload')
 
 def feedback(request):
-    return render(request,'dashboard_app/feedbacks.html')
+    feedbacks = Feedback.objects.all().order_by('-id')
+    return render(request,'dashboard_app/feedbacks.html', {"feedbacks":feedbacks})
 
-def delete_feedback(request, feedback_id):
-    #delete feedback with id == feedback__id
-    #d = Feedback.objects.get(id=feedback_id)
-    #d.delete()
-    return redirect('feedbacks')
+def delete_feedback(request, feedbackid):
+    dfeed = Feedback.objects.get(id=feedbackid)
+    dfeed.delete()
+    return redirect('/dashboard/feedback')
 
 def wall(request):
-    post_info = {
-        'posts':Post.objects.all(),
-        'comments': Comment.objects.all()
-    }
-    return render(request,'dashboard_app/wall.html', post_info)
-
-#processing the user leaving post on the wall
-def post_proc(request):
     if "id" not in request.session:
         return redirect('wall')
     else: 
-        if request.method == "POST":
-            content= request.POST["content"]
-        if len(content) == 0:
-            messages.error(request, "Post can not be empty", "post")
-            return redirect("wall")
-        else:
-            this_poster= User.objects.get(id=request.session['id'])
-            Post.objects.create(post_text=content, poster=this_poster)
-            return redirect("wall")
+        post_info = {
+            'posts':Post.objects.all().order_by('-id'),
+            'comments': Comment.objects.all().order_by('-id')
+        }
+        return render(request,'dashboard_app/wall.html', post_info)
+
+#processing the user leaving post on the wall
+def post_proc(request):
+    content= request.POST["content"]
+    errors = Post.objects.post_validator(request.POST)
+    if len(errors):
+        messages.error(request, "Post can not be empty")
+        return redirect("/dashboard/wall")
+    else:
+        this_poster= User.objects.get(id=request.session['id'])
+        Post.objects.create(post_text=content, poster=this_poster)
+        return redirect("/dashboard/wall")
 
 def delete_post(request, post_id):
     #make sure no one can randomly delete post
     if 'id' in request.session:
         p = Post.objects.get(id=post_id)
         p.delete()
-        return redirect("wall")
+        return redirect("/dashboard/wall")
     else:
         return redirect("/loginReg")
 
 def subscription(request):
-    return render(request, 'dashboard_app/subscriptions.html')
+    subscriber_list ={
+        'subscriptions':Subscriber.objects.all().order_by('-id')
+        }
+    return render(request, 'dashboard_app/subscriptions.html', subscriber_list)
 
-def unsubscribe(request, subscription_id):
-    return redirect(request, 'subscription')
+# def unsubscribe(request, subscription_id):
+#     sub = Subscriber.objects.get(id=subscription_id)
+#     sub.delete()
+#     return redirect('/dashboard/subscription')
+
+def subscribers_search(request):
+    subscriber_list ={
+        'subscriptions':Subscriber.objects.filter(sub_email__startswith=request.POST['startswith']).order_by('-id')
+        }
+    return render(request, 'dashboard_app/ajax_subscriptions.html', subscriber_list)
+
+def unsubscribe(request, sub_id):
+    sub = Subscriber.objects.get(id=sub_id)
+    sub.delete()
+    subscriber_list ={
+        'subscriptions': list(Subscriber.objects.all().values().order_by('-id'))
+        }
+    return JsonResponse(subscriber_list)
+
+def unsubscribe_ajax(request, sub_id):
+    print('REACHED Unsubscribe_ajax views')
+    sub = Subscriber.objects.get(id=sub_id)
+    sub.delete()
+    subscriber_list ={
+        'subscriptions': Subscriber.objects.all().values().order_by('-id')
+        }
+    return render(request, 'dashboard_app/ajax_subscriptions.html', subscriber_list)
 
 def add_user(request):
     return HttpResponse('add user functionality page here')
 
 def account_edit(request):
-    return HttpResponse('user acct edit page')
+    if request.method == 'POST':
+        dedit = User.objects.get(id=request.session['id'])
+        dedit.desc = request.POST['desc']
+        dedit.save()
+    return redirect('/dashboard/account_info')
+
+def demo(request):
+    return render(request, 'dashboard_app/ajax_demo.html')
+
+def all_json(request):
+    feedbacks = Feedback.objects.all()
+    feedbacks_json = serializers.serialize("json", feedbacks)
+    return HttpResponse(feedbacks_json, content_type='application/json')
+
+def all_html(request):
+    subscribers = Subscriber.objects.all()
+    return render(request, "dashboard_app/all.html", {"subscribers":subscribers})
+
+def find(request):
+    subscribers = Subscriber.objects.filter(sub_email__startswith=request.POST['email_starts_with'])
+    print(subscribers)
+    return render(request, "dashboard_app/all.html", {"subscribers":subscribers})

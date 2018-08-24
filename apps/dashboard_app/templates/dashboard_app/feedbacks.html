@@ -1,5 +1,54 @@
-<h1>Feebacks</h1>
-<a class='btn btn-info btn-sm ml-auto align-middle' href="/dashboard">Back to dashboard</a>
+<!doctype html>
+<html lang='en'>
+<head>
+    <meta charset='utf-8'>
+    <title>Feedbacks</title>
+<meta name='description' content=''>
+<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'>
+
+
+</head>
+<body>
+    <!--creating navigation bar at top-->
+    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+        {% load static %}
+        <a href='/'><img src="{% static "unit_conv_app/images/Google_closure_tools_logo.png" %}" alt='logo pic' width=60px></a>
+        <h5 class="my-0 mr-md-auto font-weight-normal"><a href='/'>Unit Conversion</a></h5>
+        <nav class="my-2 my-md-0 mr-md-3">
+            <a class="p-2 text-dark" href="account_info">Account info</a>
+            <a class="p-2 text-dark" href="feedback">Feedback</a>
+            <a class="p-2 text-dark" href="subscription">Subscription</a>
+            <a class="p-2 text-dark" href="conversion_upload">Conversion Upload</a>
+            <a class="p-2 text-dark" href="wall">Wall</a>
+        </nav>
+        <a class="btn btn-outline-primary" href="/logout">Logout</a>
+        </div>
+      
+    {% if messages %}
+    {% for message in messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endfor %}
+    {% endif %}
+    <br>
+
+    <!--Nav-tabs for user dashboard-->
+    <h4>Hello {{first_name}} {{last_name}}</h4>
+    <ul class="nav nav-tabs">
+        <li class="nav-item"><a class="nav-link" href="conversion_upload">Conversion Upload</a></li>
+        <li class="nav-item"><a class="nav-link" href="account_info">Account info</a></li>
+        <li class="nav-item"><a class="nav-link active" href="feedback">Feedback</a></li>
+        <li class="nav-item"><a class="nav-link" href="subscription">Subscription</a></li>
+        <li class="nav-item"><a class="nav-link" href="wall">Wall</a></li>
+    </ul>
+
+
+<h2 class='card-header'>Feebacks <a class='h5 text-info ml-auto' href="/dashboard">Back to dashboard</a></h2>
+<div class="mt-5">
 <!--Create search form to filter/retrieve feedback data-->
 <form>
     {% csrf_token %}
@@ -15,46 +64,56 @@
 </form>
 <div class="container">display search output table here</div>
 
-<table data-spy='scroll' style='overflow:scroll;'>
+<table class='table' data-spy='scroll' style='overflow:scroll;'>
     <!--heading of the Feedback table, link to order_by col-->
-    <tr>
-        <th>ID</th>
-        <th>Rating</th>
-        <th>Improve Area</th>
-        <th>Improve Feedback</th>
-        <th>Date</th>
-        <th>Email</th>
-        <th>Delete?</th>
-    </tr>
+    <thead class='thead-dark'>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Rating</th>
+            <th scope='col'>layout</th>
+            <th scope='col'>Layout Response</th>
+            <th scope='col'>Feature</th>
+            <th scope='col'>Feature Response</th>
+            <th scope='col'>Speed</th>
+            <th scope='col'>Speed Response</th>
+            <th scope='col'>Conversion</th>
+            <th scope='col'>Conversion Response</th>
+            <th scope='col'>Other</th>
+            <th scope='col'>Cther Response</th>
+            <th scope="col">Date</th>
+            <th scope="col">Email</th>
+            <th scope="col">Delete?</th>
+        </tr>
+    </thead>
+    <tbody>
     <!--loop for every upload by request.session.id-->
-    ## for conversion_upload in conversion_uploads }}
-        <td>##feedback_id}}</td>
-        <td>##rating}}</td>
-        <td>##improve_area}}</td>
-        <td>##improve_comment}}</td>
-        <td>##created_at}}</td>
-        <td>##email}}</td>
-        <!--model pop up alert for deleting uploaded file-->
-        <td><a class="btn btn-primary" href='#'>Delete</a>  
-            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal">Remove</button>
-            <!-- Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Delete feedback</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    </div>
-                    <div class="modal-body">
-                        <h4>Are you sure you want to delete the feedback?</h4>
-                    </div>
-                    <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
-                    <a href='/delete_feedback/{{feedback_id}}' class="btn btn-danger">Yes, remove</a>
-                    </div>
-                </div>
-                </div>
-            </div>
-        </td>
+    {% for feedback in feedbacks %}
+        <tr>
+            <th scope = 'row'>{{feedback.id}}</th>
+            <td>{{ feedback.rating }}</td>
+            <td>{{ feedback.layout }}</td>
+            <td>{{ feedback.layout_text }}</td>
+            <td>{{ feedback.feature }}</td>
+            <td>{{ feedback.feature_text }}</td>
+            <td>{{ feedback.speed }}</td>
+            <td>{{ feedback.speed_text }}</td>
+            <td>{{ feedback.conversion }}</td>
+            <td>{{ feedback.conversion_text }}</td>
+            <td>{{ feedback.other }}</td>
+            <td>{{ feedback.other_text }}</td>
+            <td>{{ feedback.created_at }}</td>
+            <td>{{ feedback.email}}</td>
+            <!--model pop up alert for deleting uploaded file-->
+            <td><a class="btn btn-primary" href='delete_feedback/{{feedback.id}}'>Delete</a>  
+            </td>
+        </tr>
+    {% endfor %}
+    </div>
+
+<script>
+
+
+
+</script>
+</body>
+</html>

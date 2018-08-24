@@ -1,0 +1,15 @@
+<tr>
+        <th scope='col'>ID</th>
+        <th scope='col' class='text-center'>Email</th>
+        <th scope='col'>Subscribed date</th>
+        <th scope='col'>Unsubscribe?</th>
+    </tr>
+    <!--loop for every upload by request.session.id-->
+    {% for subscription in subscriptions %}
+    <tr>
+        <td scope='row'>{{subscription.id}}</td>
+        <td class='text-center'>{{subscription.sub_email}}</td>
+        <td>{{subscription.created_at}}</td>
+        <td><a IDnum="{{subscription.id}}" type="button" class="btn btn-danger unsub_click">Unsubscribe</a></td>
+    </tr>
+    {% endfor %}

@@ -1,4 +1,4 @@
-<!doctype html>
+T<!doctype html>
 <html lang='en'>
 <head>
     <meta charset='utf-8'>
@@ -6,13 +6,17 @@
 <meta name='description' content=''>
 <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
 <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'>
+
+{% load static %}
+<script type='text/javascript' src="{% static 'unit_conv_app/JS/feedback.js' %}"></script>
+
 </head>
 <body>
     <!--repulicate the navi-bar-->
     <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
             {% load static %}
             <a href='/'><img src="{% static "unit_conv_app/images/Google_closure_tools_logo.png" %}" alt='logo pic' width=60px></a>
-            <h5 class="my-0 mr-md-auto font-weight-normal"><a href='/'>Company name</a></h5>
+            <h5 class="my-0 mr-md-auto font-weight-normal"><a href='/'>Unit Conversion</a></h5>
             <nav class="my-2 my-md-0 mr-md-3">
               <a class="p-2 text-dark" href="#">How-To/Demo</a>
               <a class="p-2 text-dark" href="/subscribe">Subscribe</a>
@@ -21,25 +25,81 @@
             <a class="btn btn-outline-primary" href="/loginReg">Login/Sign up</a>
           </div>
     <!--display the form for feedback-->
-    <form class="container col-4">
+    <form action='feedback_proc' method='POST' class="container col-6">
         {% csrf_token %}
         <h1 class="h3 mb-3 font-weight-normal"></h1>
-        <label for="inputEmail" class="sr-only">Email address</label>
-        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Subscribe</button>
-        <p class="mt-5 mb-3 text-muted">&copy; 2017-2018 Boostrap</p>
+        <!--inputs for ratings 0-5, excellent(5) -> horrible(0) -->
+        <h4 class='mt-3'>How do you like our site?</h4>
+        <div class='container rating_radio d-inline mr-2'>
+            <label for='excellent'>:D</label>
+            <input name="rating" type="radio" value="5" id="excellent">
+        </div>
+        <div class='container rating_radio d-inline mr-2'>
+            <label for='good'>:)</label>
+            <input name="rating" type="radio" value="4" id="good">
+        </div>
+        <div class='container rating_radio d-inline mr-2'>
+            <label for='fair'>:|</label>
+            <input name="rating" type="radio" value="3" id="fair">
+        </div>
+        <div class='container rating_radio d-inline mr-2'>
+            <label for='poor'>):</label>
+            <input name="rating" type="radio" value="2" id="poor">
+        </div>
+        <div class='container rating_radio d-inline mr-2'>
+            <label for='horrible'>D:</label>
+            <input name="rating" type="radio" value="1" id="horrible">
+        </div>
+        <!--feedback submit error message-->
+        {% if messages %}
+            {% for message in messages%}
+                <ul class='list-unstyled'>{% if message.tags == 'error'%}
+                    <li class='alert alert-danger'>{{message}}</li>
+                </ul>{% endif %}
+            {% endfor %}
+        {% endif %}
+        <!--Checkbox & text inputs in areas of improvemment-->
+        <h4 class='mt-3'>Which area should we work on?</h4>
+        <ul class='list-unstyled'>
+            <li><label for='layout'>Layout Design</label>
+            <input name='layout' type='checkbox' class='mt-2' id='checkbox_layout' value='layout'>
+            <textarea name='layout_text' id='layout_text' style='display:none' class='feedback_textarea row container ml-auto' placeholder='Type here...' value=' '></textarea>
+            </li>
+
+            <li><label for='feature'>More features</label>
+            <input name='feature' type='checkbox' class='mt-2' id='checkbox_feature' value='feature'>
+            <textarea name='feature_text' id='feature_text' style='display:none' class='feedback_textarea row container ml-auto' placeholder='Type here...' value=' '></textarea>
+            </li>
+
+            <li><label for='speed'>Website speed</label>
+            <input name='speed' type='checkbox' class='mt-2' id='checkbox_speed' value='speed'>
+            <textarea name='speed_text' id='speed_text' style='display:none' class='feedback_textarea row container ml-auto' placeholder='Type here...' value=' '></textarea>
+            </li>
+
+            <li><label for='conversion'>Conversion</label>
+            <input name='conversion' type='checkbox' class='mt-2' id='checkbox_conversion' value='conversion'>
+            <textarea name='conversion_text' id='conversion_text' style='display:none' class='feedback_textarea row container ml-auto' placeholder='Type here...' value=' '></textarea>
+            </li>
+
+            <li><label for='other'>Others, we accept compliments too!</label>
+            <input name='other' type='checkbox' class='mt-2' id='checkbox_other' value='other'>
+            <textarea name='other_text' id='other_text' style="display:none" class='feedback_textarea row container ml-auto' placeholder='Type here...' value=' '></textarea>
+            </li>
+        </ul>
+            <label class='contact'>Can we follow up with you?   Yes</label>
+            <input type='checkbox' id='checkbox_feedback_email'>
+            <input name='feedback_email' type='text' id='feedback_email' style="display:none" placeholder='Please enter email here'>
+        <br>
+            <button class="btn btn-primary mt-3" type="submit">Submit feedback</button>
+            <a class='btn btn-success ml-2 mt-3' href='/'>Return back</a>
         </form>
         <!--flash message for success/error-->
         {% if messages%}
-        <ul class="messages">
+        <ul class="messages list-unstyled">
             {% for message in messages %}
+            {% if message.tags == "success" %}
             <!--feedback submit success message-->
-            {% if message.tags == "feedback_success" %}
             <li class="alert alert-success">{{message}} <a href='/' class='link'>Return to home page</a></li>
-            {% endif %}
-            <!--feedback submit error message-->
-            {% if message.tags == "feedback_error" %}
-            <li class="alert alert-warning">{{message}}</li>
             {% endif %}
             {% endfor %}
         </ul>
