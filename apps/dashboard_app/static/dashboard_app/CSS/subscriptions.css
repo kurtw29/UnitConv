@@ -1,0 +1,31 @@
+a.active{
+    color: #007bff !important;
+    background-color: #f4eecb !important;
+    border-bottom-color: #f4eecb !important;
+}
+
+h2, h3{
+    color:forestgreen;
+}
+label{
+    color:royalblue;
+    font-weight: bold;
+    font-size:large;
+}
+input#sub_search{
+    border-radius:5px;
+    padding:0px 3px;
+    height:35px;
+}
+input[value=Search]{
+    border-radius: 5px;
+    background-color: goldenrod;
+    height:35px;
+    width:80px;
+    vertical-align: middle;
+}
+a.unsubscribe-btn{
+    border:1px solid orangered;
+    color:orangered !important;
+    border-radius: 5px;
+}

@@ -1,0 +1,52 @@
+h2, h3{
+    color:forestgreen;
+}
+input{
+    border-radius: 5px;
+}
+#add_image_form label{
+    color:royalblue;
+    font-weight:bold;
+}
+#add_image_form input[type='text']{
+    margin-right:10px;
+}
+#add_image_form input[type='submit']{
+    margin-right:10px;
+    background-color:gold;
+    border:1px solid black;
+}
+ul{
+    list-style:none;
+}
+.error{
+    color:red;
+    margin:2px 5px;
+    text-align: center;
+}
+.success{
+    color:green;
+    margin:2px 5px;
+    text-align: center;
+}
+
+#image_search_form label{
+    color:blueviolet;
+    font-weight:bold;
+}
+
+#image_search_form input{
+    margin: 20px 10px;
+}
+
+h3{
+    margin-top:20px;
+}
+            
+th{
+    text-align:center;
+}
+td img{
+    width:160px;
+    text-align: center;
+}

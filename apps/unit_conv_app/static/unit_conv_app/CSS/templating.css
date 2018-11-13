@@ -1,6 +1,10 @@
-body{
-    background-image:linear-gradient( rgb(250, 239, 178), rgb(255, 255, 246));
+/*This is to fix the repeating background-gradient on spaces outside of HTML */
+html{
+    height:100%;
+}
+html, body{
+    background:linear-gradient( rgb(250, 239, 178), rgb(255, 255, 246)) no-repeat;
 }
 .header{
-background-image:linear-gradient(rgb(243, 239, 183),rgb(255, 255, 246),rgb(243, 239, 183));
+background:linear-gradient(rgb(243, 239, 183),rgb(255, 255, 246),rgb(243, 239, 183));
 }

@@ -1,0 +1,36 @@
+<ul class='list-unstyled message_ajax'>
+        {% for post in posts %}
+            <li class='container posts'><h5 class='text-primary'>{{post.poster.first_name}} {{post.poster.last_name}} - <span class='p text-secondary'>{{post.created_at}}</span></h5>
+            <p>{{post.post_text}}</p>
+            <!--display the delete this message link for messages belonging to logged user-->
+            <a class='text-info' id='like_message' href="like_post/{{post.id}}">{{post.post_liker.count}} Likes</a>
+            {% if post.poster.id == request.session.id %}
+            <a class='text-danger' id='delete_message' href="delete_post/{{post.id}}">Delete</a>
+            {% endif %}
+            <!--display the comments about this post-->
+                <ul class='list-unstyled comment_ajax'>
+                    <!--go through each of the comments-->
+                {% for comment in comments %}
+                    <!--show comment if the comment's associated with this message-->
+                    {% if comment.commented_post.id == post.id%}<li class='li_comment'>
+                    <h6 class='text-primary'>{{comment.commentor.first_name}} {{comment.commentor.last_name}} - <span class='p text-secondary'>{{comment.created_at}}</span></h6>
+                    <p>{{comment.comment_text}}</p>
+                    <!--display the link to delete comment-->
+                    <a class='text-info' id='like_comment' href='like_comment/{{comment.id}}'>{{comment.comment_liker.count}} Likes </a>
+                        {% if comment.commentor.id == request.session.id %}
+                        <a class='text-danger' id='delete_comment' href='#delete_comment/{{comment.id}}'>Delete</a>
+                        {% endif %}
+                    </li>{% endif %}
+                {% endfor %}
+                </ul>
+                <div class='container mt-1 mb-1'>
+                    <h5 class='comment_msg'>Make a Comment</h5>
+                    <form id='comment_form' action= "comment_proc/{{post.id}}" method="POST">
+                        {% csrf_token %}
+                        <textarea name="comment_text" rows="3" cols="40"></textarea>
+                        <button  type='submit' class="mr-auto" style="display:block;">Make a comment</button>
+                    </form>
+                </div>
+            </li>
+        {% endfor %}
+        </ul>

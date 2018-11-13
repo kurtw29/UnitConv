@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 from django.db import models
 import re
 name_regex = re.compile(r'^[a-zA-Z\D.-]+$')
-email_regex = re.compile(r'^[a-zA-Z\d.+_-]+@[a-zA-Z\d._-]+\.[a-zA-Z]+$')
+email_regex = re.compile(r'^[a-zA-Z\d.+_-]+@[a-zA-Z\d_-]+\.[a-zA-Z]+$')
 pw_regex = re.compile(r'^.*(?=.*\d)(?=.*[a-zA-Z]).*$')
 
 # Create your models here.
@@ -67,10 +67,10 @@ class UserManager(models.Manager):
         confirm_new_pw = postData['confirm_new_password']
         errors = {}
         if len(new_pw) < 8:
-            errors['new_password'] = "Password Needs to be at least 8 characters"
+            errors['new_password'] = "Password needs to be at least 8 characters"
         #validating password requirements
         elif not pw_regex.match(new_pw):
-            errors['new_password'] = "Need to have digit, capital letter, & lowercase letter"
+            errors['new_password'] = "New Password needs to have digit, capital letter, & lowercase letter"
         if len(confirm_new_pw) < 1:
             errors['confirm_new_password'] = "Need to confirm new password"
         #confirm & new passwords need to match
@@ -82,6 +82,14 @@ class UserManager(models.Manager):
         errors = {}
         if len(postData['content']) < 1:
             errors['post']= "Cannot post an empty message"
+        return errors
+
+    def add_image_validator(self, postData):
+        errors = {}
+        if len(postData['title'])< 1:
+            errors['title'] = "Title cannot be blank"
+        if len(postData['image_url'])<1:
+            errors['image_url'] = "URL cannot be blank"
         return errors
 
 class User(models.Model):
@@ -113,11 +121,12 @@ class Comment(models.Model):
     updated_at = models.DateTimeField(auto_now = True)
     objects = UserManager()
 
-class Upload(models.Model):
-    file_name = models.FileField(max_length=255)
+class Image(models.Model):
+    image_name = models.CharField(max_length=255)
+    image_url = models.URLField(max_length=255)
+    uploader = models.ForeignKey(User, related_name="uploaded_images")
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
-    objects = UserManager()
 
 class Subscriber(models.Model):
     sub_email = models.CharField(max_length = 255)
@@ -128,16 +137,33 @@ class Subscriber(models.Model):
 class Feedback(models.Model):
     rating = models.PositiveSmallIntegerField()
     feedback_email = models.CharField(max_length=255, default='')
-    layout=models.CharField(max_length=45, default='')
-    layout_response = models.TextField(blank = True, default='')
-    feature=models.CharField(max_length=45, default='')
-    feature_response = models.TextField(blank = True, default='')
-    speed=models.CharField(max_length=45, default='')
-    speed_response = models.TextField(blank = True, default='')
-    conversion=models.CharField(max_length=45, default='')
-    conversion_response = models.TextField(blank = True, default='')
-    other=models.CharField(max_length=45, default='')
-    other_response = models.TextField(blank = True, default='')
+    status = models.CharField(max_length =45, default='')
+    status_comment = models.TextField(default='')
+    created_at = models.DateTimeField(auto_now_add = True)
+    updated_at = models.DateTimeField(auto_now = True)
+    # layout=models.CharField(max_length=45, default='')
+    # layout_response = models.TextField(blank = True, default='')
+    # feature=models.CharField(max_length=45, default='')
+    # feature_response = models.TextField(blank = True, default='')
+    # speed=models.CharField(max_length=45, default='')
+    # speed_response = models.TextField(blank = True, default='')
+    # conversion=models.CharField(max_length=45, default='')
+    # conversion_response = models.TextField(blank = True, default='')
+    # other=models.CharField(max_length=45, default='')
+    # other_response = models.TextField(blank = True, default='')
+    objects = UserManager()
+
+class Response(models.Model):
+    response_text = models.TextField()
+    response_category = models.CharField(max_length=255)
+    respond_feedback = models.ForeignKey(Feedback, related_name="feedback_responses")
+    created_at = models.DateTimeField(auto_now_add = True)
+    updated_at = models.DateTimeField(auto_now = True)
+
+class Image(models.Model):
+    title = models.CharField(max_length=255)
+    image_url = models.URLField(null=True, blank=True)
+    adder = models.ForeignKey(User, related_name='added_image_urls')
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
     objects = UserManager()

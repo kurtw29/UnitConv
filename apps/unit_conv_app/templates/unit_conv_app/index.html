@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang='en'>
 <head>
+  {% block head %}
     <meta charset='utf-8'>
     <title>Unit Conversion with Pictures</title>
 <meta name='description' content=''>
@@ -12,11 +13,11 @@
 <link rel="stylesheet" type= "text/css" href="{% static 'unit_conv_app/CSS/templating.css' %}">
 
 <script type='text/javascript' src="{% static 'unit_conv_app/JS/index.js' %}"></script>
-
+  {% endblock %}
 </head>
 
 <body>
-<!-- <div class="wraper container"> -->
+  {% block navibar %}
   <!--creating navigation bar at top-->
     <div class="header d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 border-bottom shadow-sm">
       {% load static %}
@@ -30,6 +31,7 @@
       </nav>
       <a class="btn btn-outline-primary" href="/{{logout_link}}">{{logout_text}}</a>
     </div>
+  {% endblock %}
     <!--length and volume tabs (length active tab by default)-->
     <ul class="nav nav-tabs">
       <li class="nav-item">
@@ -39,64 +41,54 @@
         <a class="nav-link" href='/volume'>Volume</a>
       <li>
     </ul>
-    <!--create row container for the number output -->
-    <div class="row mt-5 output_content">
+
+  <!--the conversion image-->
+<div class='image_placeholder' ></div>
+
+
+<div class='non_image'>
+  <!--create row container for the number output -->
+  <div class="output_container">
       <!--output A in col 1 of 2-->
-      <div class="container col-4">
-        <div id='output_A' ><span id='output_A'></span>
-        </div>
-      <!--form of the 4 diff units for output A-->
-        <form class='container containerA'>
-          <input type="radio" name="unitA" value="inches" checked> inches
-          <input type="radio" name="unitA" value="feet"> feet
-          <input type="radio" name="unitA" value="yards"> yards
-          <input type="radio" name="unitA" value="miles"> miles          
+      <div class="output_subcontainer">
+        <p class="output_num" id="output_A">From Here</p>
+        <!--form of the 4 diff units for output A-->
+        <form class='unit_container containerA'>
+          <input type="radio" name="unitA" value="inches" checked> <label>inches</label>
+          <input type="radio" name="unitA" value="feet"> <label>feet</label>
+          <input type="radio" name="unitA" value="yards"> <label>yards</label>
+          <input type="radio" name="unitA" value="miles"> <label>miles</label>
         </form>
       </div>
       <!--output B in col 2 of 2-->
-      <div class="container col-4">
-        <div id='output_B' ><span id='output_B'></span></div>
-        <!--form of 4 diff units for output B-->
-        <div class="container containerB btn-width">
-          {% csrf_token %}
-          <!--line up buttons 2x2-->
-          <input type="radio" name="unitB" value="inches"> inches
-          <input type="radio" name="unitB" value="feet" checked> feet
-          <input type="radio" name="unitB" value="yards" > yards
-          <input type="radio" name="unitB" value="miles" > miles
-        </div>
+      <div class="output_subcontainer">
+          <p class="output_num" id="output_B">To Here</p>
+          <!--form of 4 diff units for output B-->
+          <form class='unit_container containerB'>
+            <input type="radio" name="unitB" value="inches"> <label>inches</label>
+            <input type="radio" name="unitB" value="feet" checked> <label>feet </label>
+            <input type="radio" name="unitB" value="yards" > <label>yards</label>
+            <input type="radio" name="unitB" value="miles" > <label>miles</label>
+          </form>
       </div>
-    </div>
-    <h5 class='input_instruction container'></h5>
-  <!--the conversion image-->
-  <div class="row output_content">
-    <div id='display_image' class="container d-inline-block col-5 mt-5">{% load static %}
-        <img id ='image_convert' src="{% static 'unit_conv_app/images/can.png' %}" alt='conversion image'>
-    </div>
+  </div>
   <!--keypad-->
-    <div class="mx-auto text-center d-inline-block col-7 center mt-5">
-      <div class="container">
-        <button name='input_num' class="keypad input_num btn m-1 rounded rounded-circle" value="0">1</button>
-        <button name='input_num' class="keypad input_num btn btn-circle btn-lg  m-1 rounded rounded-circle" value="0">2</button>
-        <button name='input_num' class="keypad input_num btn m-1 rounded rounded-circle" value="0">3</button>
-      </div>
-    <div class="container">
-        <button name='input_num' class="keypad input_num btn  m-1 rounded rounded-circle" value="0">4</button>
-        <button name='input_num' class="keypad input_num btn m-1 rounded rounded-circle" value="0">5</button>
-        <button name='input_num' class="keypad input_num btn m-1 rounded rounded-circle" value="0">6</button>
-      </div>
-    <div class="container">
-        <button name='input_num' class="keypad input_num btn m-1 rounded rounded-circle" value="0">7</button>
-        <button name='input_num' class="keypad input_num btn m-1 rounded rounded-circle" value="0">8</button>
-        <button name='input_num' class="keypad input_num btn m-1 rounded rounded-circle" value="0">9</button>
-      </div>
-    <div class="container">
+  <div id='keypad' class="">
+      <h6 class='instruction input_instruction '>Click keypad to enter number.</h6>
+      <h6 class='key_warning '>Over the limit. Please click 'clear' to restart.</h6>
+        <button name='input_num' class="keypad input_num btn m-1 rounded rounded-circle" value="1">1</button>
+        <button name='input_num' class="keypad input_num btn btn-circle btn-lg  m-1 rounded rounded-circle" value="2">2</button>
+        <button name='input_num' class="keypad input_num btn m-1 rounded rounded-circle" value="3">3</button>
+        <button name='input_num' class="keypad input_num btn  m-1 rounded rounded-circle" value="4">4</button>
+        <button name='input_num' class="keypad input_num btn m-1 rounded rounded-circle" value="5">5</button>
+        <button name='input_num' class="keypad input_num btn m-1 rounded rounded-circle" value="6">6</button>
+        <button name='input_num' class="keypad input_num btn m-1 rounded rounded-circle" value="7">7</button>
+        <button name='input_num' class="keypad input_num btn m-1 rounded rounded-circle" value="8">8</button>
+        <button name='input_num' class="keypad input_num btn m-1 rounded rounded-circle" value="9">9</button>
         <button id='backspace' name='backspace' class="btn keypad m-1 rounded rounded-circle" value="back">&larr; Back </button>
         <button name='input_num' class="keypad input_num btn m-1 rounded rounded-circle" value="0">0</button>
         <button id='clear' name='clear' class="keypad btn m-1 rounded rounded-circle" value="clear">Clear</button>
-      </div>
     </div>
   </div>
-<!-- </div> -->
 </body>
 </html>

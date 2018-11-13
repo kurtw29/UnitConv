@@ -1,15 +1,21 @@
+{% load static %}
 <!doctype html>
 <html lang='en'>
 <head>
     <meta charset='utf-8'>
-    <title>Dashboard</title>
+    <title>{% block title %} Dashboard {% endblock %}</title>
 <meta name='description' content=''>
 <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
 <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'>
+<link rel="stylesheet" type= "text/css" href="{% static 'unit_conv_app/CSS/templating.css' %}">
+{% block add_to_head %}
+<link rel="stylesheet" type= "text/css" href="{% static 'dashboard_app/CSS/wall.css' %}">
+
+{% endblock %}
 </head>
 <body>
     <!--creating navigation bar at top-->
-    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+    <div class="header d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
         {% load static %}
         <a href='/'><img src="{% static "unit_conv_app/images/Google_closure_tools_logo.png" %}" alt='logo pic' width=60px></a>
         <h5 class="my-0 mr-md-auto font-weight-normal"><a href='/'>Unit Conversion</a></h5>
@@ -17,7 +23,7 @@
             <a class="p-2 text-dark" href="account_info">Account info</a>
             <a class="p-2 text-dark" href="feedback">Feedback</a>
             <a class="p-2 text-dark" href="subscription">Subscription</a>
-            <a class="p-2 text-dark" href="conversion_upload">Conversion Upload</a>
+            <a class="p-2 text-dark" href="add_image">Add Image</a>
             <a class="p-2 text-dark" href="wall">Wall</a>
         </nav>
         <a class="btn btn-outline-primary" href="/logout">Logout</a>
@@ -33,17 +39,133 @@
     {% endfor %}
     {% endif %}
     <br>
-
     <!--Nav-tabs for user dashboard-->
-    <h4>Hello {{first_name}} {{last_name}}</h4>
+    <h4>Hello {{users.first_name}} {{users.last_name}}</h4>
     <ul class="nav nav-tabs">
-        <li class="nav-item"><a class="nav-link" href="conversion_upload">Conversion Upload</a></li>
+        <li class="nav-item"><a class="nav-link" href="add_image">Add Image</a></li>
         <li class="nav-item"><a class="nav-link" href="account_info">Account info</a></li>
         <li class="nav-item"><a class="nav-link" href="feedback">Feedback</a></li>
         <li class="nav-item"><a class="nav-link" href="subscription">Subscription</a></li>
         <li class="nav-item"><a class="nav-link" href="wall">Wall</a></li>
     </ul>
-    <div class="container center">
-    </div>
+    {% block content %}
+    <h4 class='wall_heading' style='width:480px; margin:20px auto 0px auto;'>" Your messages & comments from <a href='wall'>Wall</a> "</h4>
+    <div class="container" id='ajax_table'>
+            <!--display all the posts-->
+            <ul class='list-unstyled message_ajax'>
+                {% for post in posts %}
+                    <li class='container posts'><h5 class='text-primary'>{{post.poster.first_name}} {{post.poster.last_name}} - <span class='p text-secondary'>{{post.created_at}}</span></h5>
+                    <p>{{post.post_text}}</p>
+                    <!--display the delete this message link for messages belonging to logged user-->
+                    <a class='text-info' id='like_message' href="like_post/{{post.id}}">{{post.post_liker.count}} Likes</a>
+                    {% if post.poster.id == request.session.id %}
+                    <a class='text-danger' id='delete_message' href="#delete_post/{{post.id}}">Delete</a>
+                    {% endif %}
+                    <!--display the comments about this post-->
+                        <ul class='list-unstyled comment_ajax'>
+                            <!--go through each of the comments-->
+                        {% for comment in comments %}
+                            <!--show comment if the comment's associated with this message-->
+                            {% if comment.commented_post.id == post.id%}<li class='li_comment'>
+                            <h6 class='text-primary'>{{comment.commentor.first_name}} {{comment.commentor.last_name}} - <span class='p text-secondary'>{{comment.created_at}}</span></h6>
+                            <p>{{comment.comment_text}}</p>
+                            <!--display the link to delete comment-->
+                            <a class='text-info' id='like_comment' href='like_comment/{{comment.id}}'>{{comment.comment_liker.count}} Likes </a>
+                                {% if comment.commentor.id == request.session.id %}
+                                <a class='text-danger' id='delete_comment' href='delete_comment/{{comment.id}}'>Delete</a>
+                                {% endif %}
+                            </li>{% endif %}
+                        {% endfor %}
+                        </ul>
+                        <div class='container mt-1 mb-1'>
+                            <h5 class='comment_msg'>Make a Comment</h5>
+                            <form id='comment_form' action= "comment_proc/{{post.id}}" method="POST">
+                                {% csrf_token %}
+                                <textarea name="comment_text" rows="3" cols="40"></textarea>
+                                <button  type='submit' class="mr-auto" style="display:block;">Make a comment</button>
+                            </form>
+                        </div>
+                    </li>
+                {% endfor %}
+                </ul>
+            </div>
+        
+        <script>
+            $(document).on('submit','#comment_form', function(e){
+                e.preventDefault();
+                // console.log('eting submitting clicked')
+                $.ajax({
+                    url: $(this).attr('action'),
+                    method: "POST",
+                    data: $(this).serialize(),
+                    success: function(serverResponse){
+                        console.log("SUCCESS! serverResponse: ", serverResponse);
+                        $("#ajax_table").html(serverResponse);
+                        $('textarea').val('')
+                    }
+                })
+            })
+            $(document).on('submit', '#message_form', function(e){
+                e.preventDefault();
+                $.ajax({
+                    url: $(this).attr('action'),
+                    method: "POST",
+                    data: $(this).serialize(),
+                    success: function(serverResponse){
+                        console.log("SUCCESS! serverResponse: ", serverResponse);
+                        $(".message_ajax").html(serverResponse);
+                        $('textarea').val('')
+        
+                    }
+                })
+            })
+        
+            $(document).on('click','#like_message',function(e){
+                e.preventDefault();
+                console.log('clicking like message')
+                $.ajax({
+                    url: $(this).attr('href'),
+                    success: function(serverResponse){
+                        console.log("SUCCESS! serverResponse: ", serverResponse);
+                        $("#ajax_table").html(serverResponse);
+                    }
+                })
+            })
+            $(document).on('click','#like_comment',function(e){
+                e.preventDefault();
+                console.log('clicking like comment')
+                $.ajax({
+                    url: $(this).attr('href'),
+                    success: function(serverResponse){
+                        console.log("SUCCESS! serverResponse: ", serverResponse);
+                        $("#ajax_table").html(serverResponse);
+                    }
+                })
+            })
+            $(document).on('click','#delete_comment',function(e){
+                e.preventDefault();
+                console.log('clicking delete comment')
+                $.ajax({
+                    url: $(this).attr('href'),
+                    success: function(serverResponse){
+                        console.log("SUCCESS! serverResponse: ", serverResponse);
+                        $("#ajax_table").html(serverResponse);
+                    }
+                })
+            })
+            $(document).on('click','#delete_message',function(e){
+                e.preventDefault();
+                console.log('clicking delete message')
+                $.ajax({
+                    url: $(this).attr('href'),
+                    success: function(serverResponse){
+                        console.log("SUCCESS! serverResponse: ", serverResponse);
+                        $("#ajax_table").html(serverResponse);
+                    }
+                })
+            })
+        </script>
+                    
+    {% endblock %}
 </body>
 </html>

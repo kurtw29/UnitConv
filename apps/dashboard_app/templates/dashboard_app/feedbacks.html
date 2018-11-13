@@ -5,127 +5,241 @@
     <title>Feedbacks</title>
 <meta name='description' content=''>
 <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+<script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/ui-lightness/jquery-ui.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
 <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'>
+{% load static %}
+<link rel='stylesheet' type='text/css' href="{% static 'dashboard_app/CSS/feedbacks.css' %}">
+<link rel="stylesheet" type= "text/css" href="{% static 'unit_conv_app/CSS/templating.css' %}">
+<link rel="stylesheet" type= "text/css" href="{% static 'unit_conv_app/CSS/templating.css' %}">
 
 
 </head>
 <body>
     <!--creating navigation bar at top-->
-    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+    <div class="header d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
         {% load static %}
-        <a href='/'><img src="{% static "unit_conv_app/images/Google_closure_tools_logo.png" %}" alt='logo pic' width=60px></a>
+        <a href='/'><img src="{% static "unit_conv_app/images/Google_closure_tools_logo.png" %}" alt='logo pic' width=50px></a>
         <h5 class="my-0 mr-md-auto font-weight-normal"><a href='/'>Unit Conversion</a></h5>
         <nav class="my-2 my-md-0 mr-md-3">
+            <a class="p-2 text-dark" href="add_image">Add Image</a>
             <a class="p-2 text-dark" href="account_info">Account info</a>
             <a class="p-2 text-dark" href="feedback">Feedback</a>
             <a class="p-2 text-dark" href="subscription">Subscription</a>
-            <a class="p-2 text-dark" href="conversion_upload">Conversion Upload</a>
             <a class="p-2 text-dark" href="wall">Wall</a>
         </nav>
         <a class="btn btn-outline-primary" href="/logout">Logout</a>
         </div>
       
-    {% if messages %}
-    {% for message in messages %}
-        <ul class="messages">
-            {% for message in messages %}
-            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endfor %}
-    {% endif %}
     <br>
 
     <!--Nav-tabs for user dashboard-->
     <h4>Hello {{first_name}} {{last_name}}</h4>
     <ul class="nav nav-tabs">
-        <li class="nav-item"><a class="nav-link" href="conversion_upload">Conversion Upload</a></li>
+        <li class="nav-item"><a class="nav-link" href="add_image">Add Image</a></li>
         <li class="nav-item"><a class="nav-link" href="account_info">Account info</a></li>
         <li class="nav-item"><a class="nav-link active" href="feedback">Feedback</a></li>
         <li class="nav-item"><a class="nav-link" href="subscription">Subscription</a></li>
         <li class="nav-item"><a class="nav-link" href="wall">Wall</a></li>
     </ul>
 
-
+<!--Feedback summary heading navi-->
 <h2 class='card-header'>Feedbacks <a class='h5 text-info ml-auto' href="/dashboard">Back to dashboard</a></h2>
 <div class="mt-5">
-<!--Create search form to filter/retrieve feedback data-->
-<!-- <form action='/dashboard/feedbacks_ajax' method='post' id='fb_search' >
-    {% csrf_token %}
-    <label>Feedbacks on: </label>
-    <select name='feedback_categories'>
-        <option value='Layout' selected>Layout</option>
-        <option value='Feature'>Features</option>
-        <option value='Speed'>Speed</option>
-        <option value='Conversion'>Conversion</option>
-        <option value='Other'>Other</option>
-    <input type=submit value='Search'>
-</form>
-<div class="container" id='feedbacks_ajax'>display search output table here</div> -->
-
-<table class='table' data-spy='scroll' style='overflow:scroll;'>
-    <!--heading of the Feedback table, link to order_by col-->
-    <thead class='thead-dark'>
-        <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Rating</th>
-            <th scope='col'>layout</th>
-            <th scope='col'>Layout Response</th>
-            <th scope='col'>Feature</th>
-            <th scope='col'>Feature Response</th>
-            <th scope='col'>Speed</th>
-            <th scope='col'>Speed Response</th>
-            <th scope='col'>Conversion</th>
-            <th scope='col'>Conversion Response</th>
-            <th scope='col'>Other</th>
-            <th scope='col'>Cther Response</th>
-            <th scope="col">Date</th>
-            <th scope="col">Email</th>
-            <th scope="col">Delete?</th>
-        </tr>
-    </thead>
-    <tbody>
-    <!--loop for every upload by request.session.id-->
-    {% for feedback in feedbacks %}
-        <tr>
-            <th scope = 'row'>{{feedback.id}}</th>
-            <td>{{ feedback.rating }}</td>
-            <td>{{ feedback.layout }}</td>
-            <td>{{ feedback.layout_response }}</td>
-            <td>{{ feedback.feature }}</td>
-            <td>{{ feedback.feature_response }}</td>
-            <td>{{ feedback.speed }}</td>
-            <td>{{ feedback.speed_response }}</td>
-            <td>{{ feedback.conversion }}</td>
-            <td>{{ feedback.conversion_response }}</td>
-            <td>{{ feedback.other }}</td>
-            <td>{{ feedback.other_response }}</td>
-            <td>{{ feedback.created_at }}</td>
-            <td>{{ feedback.email}}</td>
-            <!--model pop up alert for deleting uploaded file-->
-            <td><a class="btn btn-primary" href='delete_feedback/{{feedback.id}}'>Delete</a>  
-            </td>
-        </tr>
-    {% endfor %}
-    </table>
+    <!--Feedback summary info (in list)-->
+    <div class="container">
+        <!--# of total feedbacks-->
+        <div class='container container_feedback_summ'><h3 class='feedback_summ feedback_summ_label'>Total Feedbacks submitted</h3>
+            <h4 id='feedback_tot' class='feedback_summ feedback_summ_result'><span class='bold'><a href='#' style='font-size:50px;'>{{feedbacks_tot}}</a></span></h4>
+            <div id='feedback_tot_chart' style='height:200px; width:50%; margin: 20px auto;'></div>
+        </div>
+        <!--Average Rating-->
+        <div class='container container_feedback_summ'><h3 class='feedback_summ feedback_summ_label'>Average Rating</h3>
+            <h4 id='feedback_rating' class='feedback_summ feedback_summ_result'><span class='bold'><a href='#' style='font-size:50px;'>{{rating_avg}}</a></span></h4>
+            <div id='feedback_rating_bar' style='height:200px; width:50%; margin:20px auto;'></div>
+        </div>
+        <!--Total User comments -->
+        <div class='container container_feedback_summ'><h3 id='feedback_comments' class='feedback_summ feedback_summ_label'>Total User Comments (<span class='bold'><a href='#'>{{feedbacks_tot}}</a></span>) </h3>
+        <!--Breakdowns of total User comments by categories-->
+        <div class="container">
+            <div id ='feedback_comment_pie' style='height:250px; width:25%; margin:20px auto; display:inline-block; vertical-align: top;'></div>
+            <ul class='feedback_summ_comments' style='display:inline-block;'>
+                <li><h4 ><span class='bold'>{{layout_text_tot}}</span> comments on Layout</h4></li>
+                <li><h4 ><span class='bold'>{{feature_text_tot}}</span> comments on Feature</h4></li>
+                <li><h4 ><span class='bold'>{{speed_text_tot}}</span> comments on Speed/Lag</h4></li>
+                <li><h4 ><span class='bold'>{{conversion_text_tot}}</span> comments on Conversion</h4></li>
+                <li><h4 ><span class='bold'>{{other_text_tot}}</span> other/misc comments</h4></li>
+            </ul>
+        </div>
+        </div>
     </div>
 
-<!-- <script>
-    $('#fb_search').submit(function(e){
-        e.preventDefault()
+    <!--Search Form to filter and display the Feedbacks data table via AJAX-->
+    <div class="container mb-5">
+    <form action='feedbacks_ajax' method='post' id='feedbacks_form_ajax'>
+    {% csrf_token %}
         
-        $.ajax({
-            url: $(this).attr('action'),
-            method: "post",
-            data: $(this).parent().serialize(),
-            success: function(feedback_search){
-                $('#feedbacks_ajax').html(feedback_search)
-            }
-        })
-        // return false;
-    })
+        <!--form's input tags-->
+        <label for='feedback_id'>ID: </label>
+        <input name='feedback_id' id='feedback_id' type='number' />
+        <br>
+        
+        <!--User can search by select "Rating" checkboxes-->
+        <label class='rating_form_label'>Rating (check to filter):</label>
+        <input name='rating_checkbox' id='rating_5_checkbox' value='5' type='checkbox'><label>5 - Solid </label> 
+        <input name='rating_checkbox' id='rating_4_checkbox' value='4' type='checkbox'><label>4 - Good  </label> 
+        <input name='rating_checkbox' id='rating_3_checkbox' value='3' type='checkbox'><label>3 - Okay  </label> 
+        <input name='rating_checkbox' id='rating_2_checkbox' value='2' type='checkbox'><label>2 - Subpar</label> 
+        <input name='rating_checkbox' id='rating_1_checkbox' value='1' type='checkbox'><label>1 - Nope  </label> 
+        <br>
+
+        <!--Do the same for comments categories checkboxes-->
+        <label class='comments_form_label'>User comments (check all applies):</label>
+        <input name='rating_layout_checkbox' id='rating_layout_checkbox' value='layout' type='checkbox' /><label>Layout</label>
+        <input name='rating_feature_checkbox' id='rating_feature_checkbox' value='feature' type='checkbox' /><label>Feature</label>
+        <input name='rating_speed_checkbox' id='rating_speed_checkbox' value='speed' type='checkbox' /><label>Speed</label>
+        <input name='rating_conversion_checkbox' id='rating_conversion_checkbox' value='conversion' type='checkbox' /><label>Conversion</label>
+        <input name='rating_other_checkbox' id='rating_other_checkbox' value='other' type='checkbox' /><label>Other</label>
+        <br>
+
+        <!--Search by date range-->
+        <label class='search_form_date'>Date Range :  </label>
+        <label for="from"> From</label><input type="text" id="from" name="from">
+        <label for="to"> To</label><input type="text" id="to" name="to">
+        <br>
+
+        <!--Search for comments include email info-->
+        <label>Email provided</label>
+        <input type='radio' name='feedback_email' value='True' /><label>Yes</label>
+        <input type='radio' name='feedback_email' value='False' checked /><label>No</label>
+        <br>
+
+        <label>Feedback Status: </label>
+                        <select name='feedback_status'>
+                            <option value=''>None</option>
+                            <option value='Work_in_Progress'>Work in Progress</option>
+                            <option value='Reviewed'>Reviewed</option>
+                            <option value='Completed'>Completed</option>
+                        </select>
+        <br>
+        <!--Submit button for search-->
+        <!-- <button type='submit' id=btn_submit>Search</button> -->
+    </form>
+    </div>
+    <!--Displaying the ajax search feedbacks here-->
+    <div class ='feedbacks_comment_display'></div>
+    <div class='feedbacks_display' id="feedbacks_ajax_display">
+    </div>
 
 
-</script> -->
+    </div>
+
+<script type='text/javascript' src="{% static 'dashboard_app/JS/feedbacks.js' %}"></script>
+<script type='text/javascript'>
+
+window.onload = function () {
+
+    var feedbacks_num = {
+        animationEnabled: true,  
+        title:{
+            text: "Feedbacks in 2018"
+        },
+        axisX: {
+            valueFormatString: "MMM"
+        },
+        axisY: {
+            title: "# of Feedbacks received",
+            includeZero: false
+        },
+        data: [{
+            yValueFormatString: "#",
+            xValueFormatString: "MMMM",
+            type: "spline",
+            dataPoints: [
+                { x: new Date(2018, 0), y: {{feedbacks_months.0}} },
+                { x: new Date(2018, 1), y: {{feedbacks_months.1}} },
+                { x: new Date(2018, 2), y: {{feedbacks_months.2}} },
+                { x: new Date(2018, 3), y: {{feedbacks_months.3}} },
+                { x: new Date(2018, 4), y: {{feedbacks_months.4}} },
+                { x: new Date(2018, 5), y: {{feedbacks_months.5}} },
+                { x: new Date(2018, 6), y: {{feedbacks_months.6}} },
+                { x: new Date(2018, 7), y: {{feedbacks_months.7}} },
+                { x: new Date(2018, 8), y: {{feedbacks_months.8}} },
+                { x: new Date(2018, 9), y: {{feedbacks_months.9}} },
+                { x: new Date(2018, 10), y: {{feedbacks_months.10}} },
+                { x: new Date(2018, 12), y: {{feedbacks_months.11}} },
+            ]
+        }]
+    };
+    $("#feedback_tot_chart").CanvasJSChart(feedbacks_num);
+    $('#feedback_tot_chart').hide();
+
+    var feedback_ratings_bar = {
+        animationEnabled: true,
+        title: {
+            text: "Overall Ratings",                
+            fontColor: "Black"
+        },	
+        axisY: {
+            tickThickness: 0,
+            lineThickness: 0,
+            valueFormatString: " ",
+            gridThickness: 0                    
+        },
+        axisX: {
+            tickThickness: 0,
+            lineThickness: 0,
+            labelFontSize: 18,
+            labelFontColor: "Black"
+        },
+        data: [{
+            indexLabelFontSize: 26,
+            indexLabelPlacement: "outside",
+            indexLabelFontColor: "RoyalBlue",
+            indexLabelFontWeight: 600,
+            indexLabelFontFamily: "Verdana",
+            color: "Orange",
+            type: "bar",
+            dataPoints: [
+                { y: {{feedbacks_rating_count.4}}, label: "Nope (1)", indexLabel: "{{feedbacks_rating_count.4}}" },
+                { y: {{feedbacks_rating_count.3}}, label: "Subpar (2)", indexLabel: "{{feedbacks_rating_count.3}}" },
+                { y: {{feedbacks_rating_count.2}}, label: "Okay (3)", indexLabel: "{{feedbacks_rating_count.2}}" },
+                { y: {{feedbacks_rating_count.1}}, label: "Good (4)", indexLabel: "{{feedbacks_rating_count.1}}" },
+                { y: {{feedbacks_rating_count.0}}, label: "Solid (5)", indexLabel: "{{feedbacks_rating_count.0}}" }
+            ]
+        }]
+    };
+
+    $("#feedback_rating_bar").CanvasJSChart(feedback_ratings_bar);
+    $("#feedback_rating_bar").hide();
+    
+    var feedback_comment_pie = {
+        title: {
+            text: "User Feedback Comments"
+        },
+        data: [{
+                type: "pie",
+                startAngle: 45,
+                showInLegend: "true",
+                legendText: "{label}",
+                indexLabel: "{label} ({y})",
+                yValueFormatString:"#,##0.#"%"",
+                dataPoints: [
+                    { label: "Layout", y: 36 },
+                    { label: "Feature", y: 31 },
+                    { label: "Speed", y: 7 },
+                    { label: "Conversion", y: 7 },
+                    { label: "Other", y: 6 },
+                    { label: "None", y: 10}
+                ]
+        }]
+    };
+    $("#feedback_comment_pie").CanvasJSChart(feedback_comment_pie);
+    $("#feedback_comment_pie").hide();
+
+}
+</script>
 </body>
 </html>

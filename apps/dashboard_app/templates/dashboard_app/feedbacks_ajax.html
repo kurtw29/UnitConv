@@ -1,1 +1,48 @@
-<p>it went well</p>
+<table class='table' data-spy='scroll' style='overflow:scroll;'>
+        <thead class='thead-dark'>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Rating</th>
+            <th scope="col">Category</th>
+            <th scope="col">Feedback Responses</th>
+            <th scope="col">Date</th>
+            <th scope="col">Email</th>
+            <th scope="col">Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for feedback in feedbacks %}
+        <tr>
+            <th scope = 'row'>{{feedback.id}}</th>
+            <td>{{feedback.rating}}</td>
+            <td>{{feedback.feedback_responses.response_category}}</td>
+            <td>{{feedback.feedback_responses.response_text}}</td>
+            <td>{{feedback.created_at}}</td>
+            <td>{{feedback.feedback_email}}</td>
+            <td>{{feedback.status}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- <table class='table' id='responses_table' data-spy='scroll' style='overflow:scroll;' hidden>
+    <thead class='thead-dark'>
+    <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Category</th>
+        <th scope="col">Feedback Responses</th>
+        <th scope="col">Date</th>
+    </tr>
+</thead>
+<tbody>
+    {% for feedback in feedbacks %}
+    <tr>
+        <th scope = 'row'>{{feedback.id}}</th>
+        <td>{{feedback.rating}}</td>
+        <td>{{feedback.created_at}}</td>
+        <td>{{feedback.feedback_responses.response_text}}</td>
+        <td>{{feedback.status}}</td>
+    </tr>
+    {% endfor %}
+</tbody>
+</table> -->

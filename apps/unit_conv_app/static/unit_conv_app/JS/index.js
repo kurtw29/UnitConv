@@ -1,8 +1,6 @@
 $(document).ready(function(){
   //initalize variable, "sum" for output_A, "sum2" for output_B
   var sum = '';
-  $('.input_instruction').html("Click keypad to enter number. Convert from Left_Box to Right_Box")
-
   //Determine the initial units
   var unit_inputA = $("input[type=radio][name=unitA]:checked").val();
   console.log("initial unit_inputA:", unit_inputA)
@@ -19,8 +17,8 @@ $(document).ready(function(){
     console.log("changed unit_inputB: ", unit_inputB);
     conversion(unit_inputA, unit_inputB, sum);
   })
-
-//   //Identified the units
+  
+  //   //Identified the units
   $('.containerA').children("button").click(function(){
     var unit_inputA = $(this).text();
     console.log(unit_inputA);
@@ -29,54 +27,65 @@ $(document).ready(function(){
     var unit_inputB = $(this).text();
     console.log(unit_inputB)
   })
-
+  
+  $('.key_warning').hide()
   //concate the clicked number on keypad to the existing "sum"
   $('.input_num').click(function(){
+    if(sum == 0){
+      sum = ""
+    }
     var num = $(this).html()
     if(sum.length > 15 || sum > 100000){
-      $('.input_instruction').html("eep! The number's too high. Please click 'clear' to restart")
+      $('.key_warning').show()
     } else{
-      $('.input_instruction').html("Click keypad to enter number. Convert from Left_Box to Right_Box")
       sum = sum+num;
       $('#output_A').html(sum);
       conversion(unit_inputA, unit_inputB, sum)
-      $('#input_warning').html()
-      };
-    console.log()    
+      $('.key_warning').hide()
+    };
+    console.log('This is the sum after the click, outside of the function', sum)
+    console.log('This is the input_num.val() after the click, outside of the function', $(this).val())
+
+    $.ajax({
+      url: "display_image/"+$(this).val(),
+      success: function(serverResponse){
+        console.log('SUCCESS! This is servereResponse', serverResponse);
+        $('.image_placeholder').html(serverResponse);
+        $('#image_convert').css('width', '100%');
+        $('#image_convert').css('height', '100%');
+        $('#image_convert').css('object-fit', 'contain');
+        // $(document).on('load',"#image_convert", function(){}
+      }
+    })    
   })
   //clear the "sum" amount upon click "clear"
   $('#clear').click(function(){
+    // $('#image_convert').attr('src', 'static/unit_conv_app/images/can.png')
     sum = ''
-    $("#output_A").html("")
-    $("#output_B").html("")
-    $('#input_warning').html()
+    $("#output_A").html("Clear")
+    $("#output_B").html("Clear")
+    $(".image_placeholder").html("")
+    $('.key_warning').hide()
   })
   //truncate the last number when click "backspace"
   $('#backspace').click(function(){
     sum = parseInt(sum)
+    if(sum < 10){
+      sum = 0
+    } else{
     sum = sum/10 | 0;
+    }
     $("#output_A").html(sum)
     conversion(unit_inputA, unit_inputB, sum)
-    $('#input_warning').html()
+    $(".image_placeholder").html("")
   })
-  // //Select one of the output A's units (and stay clicked until other)
-  // $('.unitA').click(function(e){
-  //   $('.unitA').not(this).removeClass('active');
-  //   $(this).toggleClass('active');
-  //   e.preventDefault();
-  // })
 
-  // //Select one of the output B's units (and stay clicked until other)
-  // $('.unitB').click(function(e){
-  //   $('.unitB').not(this).removeClass('active');
-  //   $(this).toggleClass('active');
-  //   e.preventDefault();
-  // });
+  //
 
-  //Function for calcatating the conversion:
+
+  // Create conversion function to be called when keypad's clicked and convert the number
   function conversion(unit_inputA, unit_inputB, sum){
     //INCHES TO INCHES
-      $('#image_convert').attr('src', 'static/unit_conv_app/images/cb1.jpg')
     // $.ajax({
     //   url: "/display_image"
 
